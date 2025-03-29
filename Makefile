@@ -7,3 +7,5 @@ backend:
 frontend:
 	cd nix/frontend && nix develop
 
+db:
+	cd nix/db && nix develop
