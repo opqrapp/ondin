@@ -1,24 +1,23 @@
-# Ondin - Feature Flagging 시스템
+# Ondin - Feature Flagging System
 
-Ondin은 On + Decision을 뜻하는 프로덕트 이름입니다.다음과 같은 주요 기능 및 목표를 가집니다.
+Ondin is a product name that means On + Decision. It has the following main features and goals:
 
-## 정책 기반 Feature Flag 관리
+## Policy-based Feature Flag Management
 
-사용자 그룹, 지역, 시간 등의 조건에 따라 Feature Flag를 세분화하여 활성화/비활성화할 수 있는 정책 시스템이 필요하다. 예를 들어 특정 사용자 그룹이나 지역에만 새로운 기능을 노출하거나, 정해진 시간 창에만 기능을 활성화하는 등의 세밀한 토글 제어가 가능해야 한다.
+A policy system is needed that can activate/deactivate Feature Flags based on conditions such as user groups, regions, and time. For example, it should be possible to expose new features only to specific user groups or regions, or to activate features only during set time windows, allowing for precise toggle control.
 
-## 프로젝트 지원
+## Project Support
 
-사용자가 프로젝트를 생성하고 프로젝트 별로 Feature flags들을 관리할 수 있어야한다. 각 프로젝트는 독립적인 Feature Flag 집합을 가지며, 사용자는 여러 프로젝트 간에 쉽게 전환하여 관리할 수 있어야 한다. 프로젝트 단위의 권한 관리와 설정도 지원하여 팀 단위의 협업이 가능해야 한다.
+Users should be able to create projects and manage Feature flags for each project. Each project has an independent set of Feature Flags, and users should be able to easily switch between multiple projects for management. Project-level permission management and settings should also be supported to enable team collaboration.
 
-## 실시간 변경 전파 (신뢰성 우선)
+## Real-time Change Distribution (Reliability First)
 
-Feature Flag 설정이 변경되면 해당 변경을 각 서비스의 클라이언트에 실시간으로 전파하고자 한다. 다만, 실시간성 못지않게 신뢰성이 중요하므로 네트워크 일시 단절 등에도 변경 사항이 최종적으로 정확히 전달되는 아키텍처가 요구된다. 필요시 실시간성과 안정성을 겸비한 하이브리드 전파 방식도 고려한다.
+When Feature Flag settings change, these changes should be distributed in real-time to clients of each service. However, reliability is just as important as real-time delivery, so the architecture must ensure that changes are accurately delivered even during temporary network disconnections. If needed, a hybrid distribution method combining real-time capabilities and stability may be considered.
 
+## Client Local Cache
 
-## 클라이언트 로컬 캐시
+Each application client should replicate/cache the central server's Feature Flag information locally, allowing flag status to be checked locally without querying the server for every request. This ensures that functionality can be maintained using the most recent state even during central system failures.
 
-각 애플리케이션 클라이언트는 중앙 서버의 Feature Flag 정보를 로컬에 복제/캐시하여, 매 요청마다 서버에 조회하지 않고도 로컬에서 Flag 상태를 확인할 수 있어야 한다. 이는 중앙 시스템 장애 시에도 마지막 상태를 활용해 기능을 유지하기 위함이다.
+## Intuitive Management UI
 
-## 직관적인 관리 UI
-
-비개발자도 사용할 수 있는 웹 기반 UI를 통해 Feature Flag를 생성, 수정, 정책 조건을 설정할 수 있어야 한다. 여러 Flag들의 상태를 한눈에 파악하고 토글하며, 조건(rule)을 쉽게 구성할 수 있는 UX 패턴이 요구된다.
+A web-based UI that even non-developers can use should allow for the creation, modification, and setting of policy conditions for Feature Flags. The UX pattern should make it easy to see the status of multiple flags at a glance, toggle them, and configure conditions (rules).
