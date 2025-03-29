@@ -2,7 +2,7 @@
   description = "Backend development environment";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -19,10 +19,6 @@
             # Elixir and Erlang
             elixir
             erlang
-            
-            # Common development tools
-            inotify-tools # For file system events, used by Phoenix live reload
-            postgresql # In case you're using PostgreSQL
           ];
 
           # Shell hook for environment setup
