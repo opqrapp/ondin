@@ -19,7 +19,7 @@ Always write commit messages in English.
 
 ### Prefix
 
-Always include [be] to indicate that this commit belongs to the backend project.
+Must include [be] to indicate that this commit belongs to the backend project.
 
 ### Types
 - feat: add new feature
