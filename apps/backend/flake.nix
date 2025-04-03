@@ -23,6 +23,7 @@
             sapling
             # Database
             postgresql
+            bun
           ];
 
 
