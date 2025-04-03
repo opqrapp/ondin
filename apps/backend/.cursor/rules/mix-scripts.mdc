@@ -1,0 +1,134 @@
+---
+description: Mix 태스크를 만들고 사용하는 방법에 대한 가이드
+globs: 
+alwaysApply: false
+---
+# Mix 스크립트 작성 및 사용 가이드
+
+## Mix 태스크 개요
+Mix 태스크는 프로젝트에서 자동화된 작업을 수행하기 위한 Elixir 스크립트입니다. 이를 통해 반복 작업을 자동화하고 개발 워크플로우를 개선할 수 있습니다.
+
+## 태스크 구조
+모든 태스크는 `lib/mix/tasks/` 디렉토리에 위치해야 합니다. 각 태스크는 다음 네이밍 컨벤션을 따라야 합니다:
+- 파일명: `<namespace>.<task_name>.ex`
+- 모듈명: `Mix.Tasks.<Namespace>.<TaskName>`
+
+## 태스크 작성 방법
+
+### 기본 구조
+```elixir
+defmodule Mix.Tasks.MyNamespace.MyTask do
+  @moduledoc """
+  태스크에 대한 설명
+  
+  ## 사용법
+  
+      mix my_namespace.my_task [옵션]
+  
+  ## 옵션
+  
+    * `--option1` - 옵션1 설명
+    * `--option2` - 옵션2 설명
+  """
+  use Mix.Task
+  
+  @shortdoc "태스크에 대한 짧은 설명"
+  
+  @impl Mix.Task
+  def run(args) do
+    # 태스크 로직 구현
+  end
+end
+```
+
+### 옵션 파싱 예제
+```elixir
+def run(args) do
+  {opts, _, _} = OptionParser.parse(args, 
+    switches: [
+      option1: :boolean,
+      option2: :string
+    ],
+    aliases: [
+      o1: :option1,
+      o2: :option2
+    ]
+  )
+  
+  # 옵션 사용하기
+  if opts[:option1] do
+    # option1이 true일 때 실행할 로직
+  end
+  
+  option2_value = opts[:option2]
+  # option2 값을 사용하는 로직
+end
+```
+
+## 태스크 사용 방법
+
+1. 태스크 실행:
+```bash
+mix <namespace>.<task_name> [옵션]
+```
+
+2. 도움말 확인:
+```bash
+mix help <namespace>.<task_name>
+```
+
+## 태스크 구현 예시
+
+### DB 시드 데이터 생성 태스크
+```elixir
+defmodule Mix.Tasks.Ondin.GenerateSeeds do
+  @moduledoc """
+  개발 환경을 위한 시드 데이터를 생성합니다.
+  
+  ## 사용법
+  
+      mix ondin.generate_seeds [옵션]
+  
+  ## 옵션
+  
+    * `--count` - 생성할 데이터의 개수 (기본값: 10)
+    * `--type` - 생성할 데이터 타입 (예: users, flags, projects)
+  """
+  use Mix.Task
+  
+  @shortdoc "개발용 시드 데이터 생성"
+  
+  @impl Mix.Task
+  def run(args) do
+    # Ondin 어플리케이션 시작 (Repo 접근을 위해)
+    Mix.Task.run("app.start")
+    
+    {opts, _, _} = OptionParser.parse(args,
+      switches: [
+        count: :integer,
+        type: :string
+      ],
+      aliases: [
+        c: :count,
+        t: :type
+      ]
+    )
+    
+    count = opts[:count] || 10
+    type = opts[:type]
+    
+    # 데이터 생성 로직 구현
+    # ...
+    
+    Mix.shell().info("#{count}개의 #{type} 데이터가 생성되었습니다.")
+  end
+end
+```
+
+## 모범 사례
+
+1. 태스크는 단일 책임 원칙을 따라야 합니다.
+2. 복잡한 로직은 별도의 모듈로 분리하고, 태스크에서는 조정만 담당합니다.
+3. 사용자에게 진행 상황을 알려주는 피드백을 제공합니다.
+4. 오류 처리 로직을 구현하여 태스크가 실패했을 때 명확한 오류 메시지를 표시합니다.
+5. 모든 태스크에 대해 상세한 문서화를 제공합니다.
