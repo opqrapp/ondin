@@ -20,6 +20,12 @@ defmodule OndinWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/api", OndinWeb do
+    pipe_through :api
+
+    resources "/projects", ProjectController, except: [:new, :edit]
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", OndinWeb do
   #   pipe_through :api
