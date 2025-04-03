@@ -5,47 +5,55 @@ alwaysApply: false
 ---
 # Commit Message Guidelines
 
+## Language
+
+Always write commit messages in English.
+
 ## Format
-<prefix><type>(<scope>): <subject>
+
+<prefix> <type>(<scope>): <subject>
 
 <body>
 
 <footer>
 
-## Prefix
-반드시 [be]를 붙여서 backend 프로젝임을 커밋메시지에 표시한다
+### Prefix
 
-## Types
-- feat: 새로운 기능 추가
-- fix: 버그 수정
-- docs: 문서 변경
-- style: 코드 포맷팅, 세미콜론 누락 등 (코드 변경 없음)
-- refactor: 코드 리팩토링
-- test: 테스트 코드 추가/수정
-- chore: 빌드 프로세스, 패키지 매니저 설정 변경 등
+Always include [be] to indicate that this commit belongs to the backend project.
 
-## Scope
-어떤 부분이 변경되었는지 명시 (선택 사항)
-예: (api), (core), (ui), (db)
+### Types
+- feat: add new feature
+- fix: fix bug
+- docs: update documentation
+- style: code formatting, missing semicolons, etc. (no code changes)
+- refactor: refactor code
+- test: add/update test code
+- chore: update build process, package manager configuration, etc.
 
-## Subject
-- 50자 이내로 작성
-- 현재 시제 사용 ("변경했음"이 아닌 "변경")
-- 첫 글자는 소문자로 시작
-- 마침표로 끝내지 않음
+### Scope
 
-## Body (선택 사항)
-- 각 줄 72자 이내로 작성
-- 변경 이유와 이전 동작과의 차이점 설명
+Optionally specify which part was changed.
+For example: (api), (core), (ui), (db)
 
-## Footer (선택 사항)
-- Breaking changes 명시
-- Closed issues 참조
+### Subject
+- Keep it within 50 characters.
+- Use present tense (e.g., “change” instead of “changed”).
+- Start with a lowercase letter.
+- Do not end with a period.
 
-## 예시
-feat(auth): 소셜 로그인 기능 추가
+### Body (optional)
+- Keep each line within 72 characters.
+- Explain the reason for the change and how it differs from previous behavior.
 
-OAuth2를 사용한 구글, 페이스북 로그인 기능 구현
-사용자 프로필 정보 자동 동기화 추가
+### Footer (optional)
+- Specify any breaking changes.
+- Reference closed issues.
+
+### Example
+
+[be] feat(auth): add social login feature
+
+Implement Google and Facebook login using OAuth2.
+Add automatic synchronization of user profile information.
 
 Closes #123
