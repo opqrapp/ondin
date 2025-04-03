@@ -1,0 +1,51 @@
+---
+description: git commit 메시지를 작성하는 가이드
+globs: 
+alwaysApply: false
+---
+# Commit Message Guidelines
+
+## Format
+<prefix><type>(<scope>): <subject>
+
+<body>
+
+<footer>
+
+## Prefix
+반드시 [be]를 붙여서 backend 프로젝임을 커밋메시지에 표시한다
+
+## Types
+- feat: 새로운 기능 추가
+- fix: 버그 수정
+- docs: 문서 변경
+- style: 코드 포맷팅, 세미콜론 누락 등 (코드 변경 없음)
+- refactor: 코드 리팩토링
+- test: 테스트 코드 추가/수정
+- chore: 빌드 프로세스, 패키지 매니저 설정 변경 등
+
+## Scope
+어떤 부분이 변경되었는지 명시 (선택 사항)
+예: (api), (core), (ui), (db)
+
+## Subject
+- 50자 이내로 작성
+- 현재 시제 사용 ("변경했음"이 아닌 "변경")
+- 첫 글자는 소문자로 시작
+- 마침표로 끝내지 않음
+
+## Body (선택 사항)
+- 각 줄 72자 이내로 작성
+- 변경 이유와 이전 동작과의 차이점 설명
+
+## Footer (선택 사항)
+- Breaking changes 명시
+- Closed issues 참조
+
+## 예시
+feat(auth): 소셜 로그인 기능 추가
+
+OAuth2를 사용한 구글, 페이스북 로그인 기능 구현
+사용자 프로필 정보 자동 동기화 추가
+
+Closes #123
