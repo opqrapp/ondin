@@ -1,7 +1,11 @@
 default:
 
-# 개발 환경 설정
+# 개발 환경 설정 (아무 프로그램도 자동 실행하지 않고 쉘에 남음)
 dev:
+	nix develop
+
+# nix 셸만 실행 (START_PROGRAM 설정 없이)
+shell:
 	nix develop
 
 # Phoenix 서버 실행

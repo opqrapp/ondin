@@ -34,7 +34,9 @@
             echo "Elixir version: $(elixir --version)"
 
             # 환경 변수에 따라 시작할 프로그램 결정
-            if [ "$START_PROGRAM" = "phoenix" ]; then
+            if [ -z "$START_PROGRAM" ]; then
+              echo "START_PROGRAM not set. Remaining in shell."
+            elif [ "$START_PROGRAM" = "phoenix" ]; then
               echo "Starting Phoenix server..."
               iex -S mix phx.server
             elif [ "$START_PROGRAM" = "postgres" ]; then
@@ -54,6 +56,9 @@
                 pg_ctl -D $PRJ_ROOT/pgdata stop -m fast
               }
               trap cleanup EXIT
+            else
+              echo "Unknown START_PROGRAM value: $START_PROGRAM"
+              echo "Supported values: phoenix, postgres"
             fi
           '';
         };
