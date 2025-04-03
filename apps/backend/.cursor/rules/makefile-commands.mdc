@@ -1,0 +1,106 @@
+---
+description: Makefile에 새로운 커맨드를 추가하는 방법
+globs: 
+alwaysApply: false
+---
+# Makefile에 커맨드 추가하기
+
+## 기본 구조
+Makefile의 기본 구조는 다음과 같습니다:
+
+```makefile
+target_name:
+	command1
+	command2
+```
+
+## 커맨드 추가 가이드라인
+
+1. 모든 커맨드 이름은 간결하고 목적을 명확하게 표현해야 합니다
+2. 들여쓰기는 반드시 탭(tab)을 사용해야 합니다 (스페이스가 아님)
+3. 관련된 커맨드들은 함께 그룹화합니다
+4. 각 섹션 사이에는 빈 줄을 추가합니다
+
+## 커맨드 예제
+
+### 개발 관련 커맨드
+
+```makefile
+# 개발 환경 설정
+dev:
+	nix develop
+
+# 개발 서버 실행
+serve:
+	mix phx.server
+
+# PostgreSQL 설정
+setup-postgres:
+	mix ondin.setup_postgres
+```
+
+### 테스트 관련 커맨드
+
+```makefile
+# 모든 테스트 실행
+test:
+	mix test
+
+# 테스트 커버리지 확인
+test-coverage:
+	mix test --cover
+```
+
+### 배포 관련 커맨드
+
+```makefile
+# 릴리즈 빌드
+release:
+	MIX_ENV=prod mix release
+
+# 도커 이미지 빌드
+docker-build:
+	docker build -t ondin:latest .
+```
+
+## 변수 사용하기
+
+공통 값은 변수로 정의하여 재사용할 수 있습니다:
+
+```makefile
+APP_NAME = ondin
+ENV = dev
+
+run:
+	MIX_ENV=$(ENV) mix phx.server
+
+docker-build:
+	docker build -t $(APP_NAME):latest .
+```
+
+## 종속성 추가하기
+
+한 커맨드가 다른 커맨드에 의존할 때:
+
+```makefile
+setup: setup-postgres
+	mix deps.get
+	mix ecto.setup
+
+deploy: test release
+	./scripts/deploy.sh
+```
+
+## 도움말 커맨드 추가
+
+```makefile
+help:
+	@echo "사용 가능한 커맨드:"
+	@echo "  make dev              개발 환경 설정"
+	@echo "  make serve            개발 서버 실행"
+	@echo "  make test             테스트 실행"
+	@echo "  make setup-postgres   PostgreSQL 설정"
+```
+```
+
+이 가이드라인을 따라 Makefile에 커맨드를 추가하세요.
