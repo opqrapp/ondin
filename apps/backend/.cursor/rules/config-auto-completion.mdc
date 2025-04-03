@@ -1,0 +1,82 @@
+---
+description: config.exs 파일에 자동으로 필요한 설정을 추가하는 방법
+globs: 
+alwaysApply: false
+---
+# Config.exs 자동 설정 가이드
+
+Ondin 프로젝트의 config.exs 파일에 필요한 설정을 자동으로 추가하기 위한 가이드입니다.
+
+## 주요 설정 구조
+
+### 설정파일들 종류
+- `config/config.exs`: 모든 환경에 적용되는 기본 설정
+- `config/dev.exs`: 개발 환경 전용 설정
+- `config/test.exs`: 테스트 환경 전용 설정
+- `config/prod.exs`: 프로덕션 환경 전용 설정
+- `config/runtime.exs`: 애플리케이션 시작 시점에 평가되는 설정 (환경 변수 사용 시 유용)
+
+### 설정 로드 순서
+config.exs → 환경별 설정(dev/test/prod) → runtime.exs
+
+### 기본 어플리케이션 설정
+```elixir
+config :ondin,
+  ecto_repos: [Ondin.Repo],
+  generators: [timestamp_type: :utc_datetime]
+```
+
+### 엔드포인트 설정
+```elixir
+config :ondin, OndinWeb.Endpoint,
+  url: [host: "localhost"],
+  adapter: Bandit.PhoenixAdapter,
+  render_errors: [
+    formats: [html: OndinWeb.ErrorHTML, json: OndinWeb.ErrorJSON],
+    layout: false
+  ],
+  pubsub_server: Ondin.PubSub,
+  live_view: [signing_salt: "랜덤_솔트_값"]
+```
+
+### 피처 플래그 시스템 설정
+```elixir
+config :ondin, Ondin.FeatureFlags,
+  repo: Ondin.Repo,
+  pubsub_server: Ondin.PubSub,
+  cache_ttl: 300_000,  # 5분 (밀리초)
+  default_flags: %{
+    "enable_new_ui" => false,
+    "enable_beta_features" => false
+  }
+```
+
+### 데이터베이스 타임아웃 설정
+```elixir
+config :ondin, Ondin.Repo,
+  timeout: 60_000, # 쿼리 타임아웃 (밀리초)
+  pool_timeout: 60_000 # 풀 타임아웃 (밀리초)
+```
+
+### 실시간 이벤트 분배 설정
+```elixir
+config :ondin, Ondin.EventDistributor,
+  max_retries: 3,
+  retry_delay: 1000, # 밀리초
+  batch_size: 100
+```
+
+## 환경별 설정
+
+각 환경(dev, test, prod)에 따라 적절한 설정을 runtime.exs 또는 각 환경 설정 파일에 추가해야 합니다. 프로젝트 요구사항에 따라 설정을 조정하세요.
+
+## 설정 확인 방법
+
+설정이 제대로 적용되었는지 확인하려면:
+
+```elixir
+iex -S mix
+
+# 설정 확인
+iex> Application.get_all_env(:ondin)
+``` 
