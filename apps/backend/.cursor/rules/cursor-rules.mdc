@@ -1,0 +1,75 @@
+---
+description: 프로젝트에서 cursor rules을 새로 추가하거나 편집하는 방법
+globs: 
+alwaysApply: false
+---
+
+# 프로젝트에 새로운 커서 규칙을 추가하는 방법
+
+## 규칙 파일 위치
+항상 규칙 파일은 PROJECT_ROOT/.cursor/rules/ 디렉토리에 배치합니다.
+
+```
+.cursor/rules/
+├── your-rule-name.mdc
+├── another-rule.mdc
+└── ...
+```
+
+
+## 파일 명명 규칙
+- 파일명은 kebab-case를 사용합니다.
+- 파일 확장자는 반드시 .mdc여야 합니다.
+- 규칙의 목적을 잘 설명하는 이름을 사용합니다.
+
+
+## 디렉토리 구조
+전체 프로젝트 구조는 아래와 같습니다.
+
+```
+PROJECT_ROOT/
+├── .cursor/
+│   └── rules/
+│       ├── your-rule-name.mdc
+│       └── ...
+└── ...
+```
+
+
+## 파일 배치 시 주의사항
+규칙 파일을 아래의 위치에 배치하지 않습니다:
+- 프로젝트 루트에 배치
+- .cursor/rules 외의 하위 디렉토리에 배치
+- 기타 다른 위치에 배치
+
+
+## 커서 규칙 구조
+각 규칙 파일은 아래와 같은 구조를 따릅니다:
+
+```
+---
+description: 규칙의 목적에 대한 간단한 설명
+globs: optional/path/pattern/**/* 
+alwaysApply: false
+---
+# 규칙 제목
+
+규칙에 대한 주요 내용을 마크다운 형식으로 설명합니다.
+
+1. 단계별 지침
+2. 코드 예제
+3. 가이드라인
+
+예시:
+<typescript>
+// 좋은 예시
+function goodExample() {
+  // 가이드라인을 준수한 구현
+}
+
+// 나쁜 예시
+function badExample() {
+  // 가이드라인을 따르지 않은 구현
+}
+</typescript>
+```
