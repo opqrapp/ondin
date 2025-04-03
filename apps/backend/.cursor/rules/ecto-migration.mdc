@@ -1,0 +1,171 @@
+---
+description: ecto를 사용해서 migration 파일을 만들고 관리하는 방법
+globs: 
+alwaysApply: false
+---
+# Ecto를 사용한 DB Migration 가이드
+
+## Migration 파일 생성하기
+
+Phoenix 프레임워크에서는 다음 Mix 명령어를 통해 새로운 마이그레이션 파일을 생성할 수 있습니다:
+
+```bash
+# 기본 마이그레이션 파일 생성
+mix ecto.gen.migration migration_name
+
+# 모델 관련 마이그레이션 파일 생성
+mix phx.gen.schema ModelName table_name field1:type1 field2:type2
+```
+
+생성된 파일은 `priv/repo/migrations/` 디렉토리에 timestamp 형식의 접두사와 함께 저장됩니다.
+예: `20240601120000_create_users.exs`
+
+## 마이그레이션 파일 구조
+
+마이그레이션 파일의 기본 구조는 다음과 같습니다:
+
+```elixir
+defmodule Ondin.Repo.Migrations.CreateUsers do
+  use Ecto.Migration
+
+  def up do
+    # 테이블 생성, 변경 로직
+  end
+
+  def down do
+    # rollback 로직
+  end
+  
+  # 또는 up/down 대신 change 함수 사용
+  def change do
+    # 자동으로 up/down 처리
+  end
+end
+```
+
+## 주요 마이그레이션 작업
+
+### 테이블 생성
+
+```elixir
+def change do
+  create table(:users) do
+    add :username, :string, null: false
+    add :email, :string, null: false
+    add :encrypted_password, :string, null: false
+    add :is_active, :boolean, default: true
+    
+    timestamps() # created_at, updated_at 필드 추가
+  end
+  
+  # 인덱스 생성
+  create unique_index(:users, [:email])
+  create index(:users, [:username])
+end
+```
+
+### 테이블 변경
+
+```elixir
+def change do
+  alter table(:users) do
+    add :bio, :text
+    modify :username, :string, size: 100
+    remove :temporary_field
+  end
+end
+```
+
+### 컬럼 유형
+
+```elixir
+# 주요 컬럼 유형
+add :id, :binary_id  # UUID
+add :name, :string
+add :description, :text
+add :age, :integer
+add :score, :float
+add :is_active, :boolean
+add :metadata, :map
+add :settings, :json
+add :birth_date, :date
+add :event_time, :time
+add :inserted_at, :utc_datetime
+add :naive_time, :naive_datetime
+add :binary_data, :binary
+add :user_id, references(:users, on_delete: :delete_all)
+```
+
+### 외래 키 제약 조건
+
+```elixir
+def change do
+  create table(:posts) do
+    add :title, :string
+    add :body, :text
+    add :user_id, references(:users, on_delete: :delete_all)
+    
+    timestamps()
+  end
+  
+  create index(:posts, [:user_id])
+end
+```
+
+### 제약 조건 추가
+
+```elixir
+def change do
+  create table(:products) do
+    add :name, :string
+    add :price, :decimal, precision: 10, scale: 2
+    
+    timestamps()
+  end
+  
+  create constraint("products", :price_must_be_positive, check: "price > 0")
+end
+```
+
+## 마이그레이션 실행 커맨드
+
+```bash
+# 모든 마이그레이션 적용
+mix ecto.migrate
+
+# 특정 버전까지만 마이그레이션 적용
+mix ecto.migrate --to 20240601120000
+
+# 특정 단계까지만 마이그레이션 적용
+mix ecto.migrate --step 2
+
+# 롤백 (한 단계)
+mix ecto.rollback
+
+# 여러 단계 롤백
+mix ecto.rollback --step 3
+
+# 모든 마이그레이션 롤백
+mix ecto.rollback --all
+
+# 마이그레이션 현재 상태 확인
+mix ecto.migrations
+```
+
+## 모범 사례
+
+1. **마이그레이션은 멱등성을 유지해야 합니다.**
+   - 동일한 마이그레이션을 여러 번 실행해도 동일한 결과가 나와야 합니다.
+
+2. **down 함수는 up 함수의 정확한 역순이어야 합니다.**
+   - 롤백이 필요할 때 데이터 구조가 정확히 이전 상태로 돌아가야 합니다.
+
+3. **마이그레이션 파일은 한 번 배포된 후에는 수정하지 마세요.**
+   - 변경이 필요하면 새로운 마이그레이션 파일을 생성하세요.
+
+4. **큰 데이터 마이그레이션은 별도로 관리하세요.**
+   - 대량의 데이터 변환은 마이그레이션이 아닌 별도의 스크립트로 처리하는 것이 좋습니다.
+
+5. **테이블과 인덱스 명명 규칙을 일관되게 유지하세요.**
+   - 복수형 테이블 이름 (users, products)
+   - 외래 키 필드는 단수형_id (user_id)
