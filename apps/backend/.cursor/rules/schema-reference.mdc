@@ -1,0 +1,28 @@
+---
+description: Feature Flag system's database and table schema reference
+globs: 
+alwaysApply: false
+---
+# Feature Flags Schema Reference
+
+This file contains information about where to find the Ecto schema definitions for the feature flagging system in Ondin.
+
+## Schema Files
+
+All database schema definitions for the feature flagging system are located in the `lib/ondin/feature_flags/` directory. The following schema modules define the database structure:
+
+- `lib/ondin/feature_flags/project.ex` - Defines the "projects" table schema
+- `lib/ondin/feature_flags/feature.ex` - Defines the "features" table schema
+- `lib/ondin/feature_flags/rule.ex` - Defines the "rules" table schema
+- `lib/ondin/feature_flags/condition.ex` - Defines the "conditions" table schema
+
+## Schema Relationships
+
+The relationships between these schemas are:
+
+- `Project` has many `Features`
+- `Feature` belongs to a `Project` and has many `Rules`
+- `Rule` belongs to a `Feature` and has many `Conditions`
+- `Condition` belongs to a `Rule`
+
+Each schema file contains the Ecto schema definition, changesets with validations, and any helper functions related to the model.
