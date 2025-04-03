@@ -1,0 +1,34 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Database Schema Dump
+
+This rule describes how to extract the Data Definition Language (DDL) for your database tables and save it to `docs/table_ddls.sql`. This is useful after running Ecto migrations or making other schema changes to keep a record of the current table structures.
+
+## Connection info
+Please take a look at [dev.exs](mdc:config/dev.exs) file. It contains DB access info including db user, db host, db port, db name.
+
+## Procedure
+
+1.  **Ensure Migrations are Applied:** Make sure all necessary Ecto migrations have been run successfully:
+    ```bash
+    mix ecto.migrate
+    ```
+
+2. Have a nix shell by running `make shell`.
+3.  **Dump Schema using `pg_dump`:** Use the `pg_dump` command-line utility to extract the schema definitions. You'll need to provide your database connection details. Replace `[YOUR_DB_USER]`, `[YOUR_DB_HOST]`, `[YOUR_DB_PORT]`, and `[YOUR_DB_NAME]` with your actual database credentials. You might fetch these from your configuration or environment variables.
+
+    ```bash
+    pg_dump --schema-only --username [YOUR_DB_USER] --host [YOUR_DB_HOST] --port [YOUR_DB_PORT] --dbname [YOUR_DB_NAME] --no-owner --no-privileges --exclude-table=schema_migrations > docs/table_ddls.sql
+    ```
+
+    *   `--schema-only`: Dumps only the object definitions (schema), not the data.
+    *   `--username`, `--host`, `--port`, `--dbname`: Specifies connection parameters.
+    *   `--no-owner`: Prevents dumping object ownership commands.
+    *   `--no-privileges`: Prevents dumping access privileges (GRANT/REVOKE).
+    *   `--exclude-table=schema_migrations`: Excludes the Ecto migrations table itself from the dump.
+    *   `> docs/table_ddls.sql`: Redirects the output to the specified file, overwriting it if it exists.
+
+3.  **Review and Commit:** Review the generated `docs/table_ddls.sql` file to ensure it contains the expected DDL statements and commit it to your version control system.
